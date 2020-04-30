@@ -2,7 +2,7 @@ import streamlit as st
 import numpy as np
 import copy
 
-st.title('HCSSA 狼人杀模拟器')
+st.title('HCSSA 狼人杀胜率模拟器')
 
 # hyper-parameters
 num_players = 12
@@ -18,26 +18,25 @@ p_follow = 0.9
 # wolf vote
 wolf_arrangement = False
 
-
-
-
 # parameters in side bar
 st.markdown(f'{num_players}人局  狼人: {num_wolves}  神民: {num_gods}  平民: {num_villagers}')
 st.markdown('无警徽 狼人无格式 白板神')
 st.markdown('---')
 
 game_setting = {}
-wolf_levels_dict = {'新手': 0.5, '普通': 0.7, '专家': 0.9}
-wolf_level = st.sidebar.selectbox('请选择狼人的等级', list(wolf_levels_dict.keys()))
-st.sidebar.markdown(f'**狼人找到神** 的概率为{wolf_levels_dict[wolf_level]}')
-game_setting['wolf'] = wolf_levels_dict[wolf_level]
+# wolf_levels_dict = {'新手': 0.5, '普通': 0.7, '专家': 0.9}
+wolf_level = st.sidebar.number_input('狼人找到神民的概率为',
+    min_value=0.50, max_value=1.0, step=0.02)
+st.sidebar.markdown('注：盲猜中狼人找到神民的概率为0.5')
+game_setting['wolf'] = wolf_level
 
 # how likely a player is able to distinguish wolf if he is not wolf
 # random guess would be 4/11, 36.3%
-villager_levels_dict = {'新手': 0.45, '普通': 0.7, '专家': 0.95}
-villager_level = st.sidebar.selectbox('请选择村民的等级', list(villager_levels_dict.keys()))
-st.sidebar.markdown(f'**村民找到狼人** 的概率为{villager_levels_dict[villager_level]}')
-game_setting['villager'] = villager_levels_dict[villager_level]
+# villager_levels_dict = {'新手': 0.45, '普通': 0.7, '专家': 0.95}
+villager_level = st.sidebar.number_input('村民找到狼人的概率为',
+    min_value=0.36, max_value=1.0, step=0.02)
+st.sidebar.markdown('注：盲猜中村民找到狼人的概率约为0.36')
+game_setting['villager'] = villager_level
 st.sidebar.markdown('---')
 
 num_simulation = st.sidebar.number_input('进行模拟的轮数', min_value=5, max_value=100, step=5)
