@@ -24,7 +24,7 @@ wolf_arrangement = False
 # parameters in side bar
 st.markdown(f'{num_players}人局  狼人: {num_wolves}  神民: {num_gods}  平民: {num_villagers}')
 st.markdown('无警徽 狼人无格式 白板神')
-
+st.markdown('---')
 
 game_setting = {}
 wolf_levels_dict = {'新手': 0.5, '普通': 0.7, '专家': 0.9}
@@ -147,11 +147,26 @@ def sheriff_arrangement(sheriff, group_dict, p_wolf):
     else:
         return None
 
+def prettify_results(results):
+    pretty_results = []
+    grand_total = 0
+    grand_wolf_victory = 0
+    for r in results:
+        total = r['wolf'] + r['villager']
+        grand_total += total
+        grand_wolf_victory += r['wolf']
+        pretty_result = f"{r['wolf']}局狼人胜，狼人胜率为{float(r['wolf']/total)}, {r['villager']}局好人胜，好人胜率为{float(r['villager']/total)}"
+        pretty_results.append(pretty_result)
+    average_wolf_win_rate = float(grand_wolf_victory/grand_total)
+    average_villager_win_rate = 1.0 - average_wolf_win_rate
+    return (pretty_results, (average_wolf_win_rate, average_villager_win_rate))
 
 # simulation
 if st.sidebar.button('开始模拟'):
     overall_results = []
-
+    st.markdown(f'好人等级为 **{villager_level}**')
+    st.markdown(f'狼人等级为 **{wolf_level}**')
+    st.markdown('---')
     for num in range(num_simulation):
         winning_record = {
             villager_label: 0,
@@ -204,4 +219,9 @@ if st.sidebar.button('开始模拟'):
                     break
         overall_results.append(winning_record)
 
-    st.write(overall_results)
+    st.markdown('**模拟结果**')
+    pretty_results, averages = prettify_results(overall_results)
+    st.write(f"狼人平均胜率为{averages[0]}， 好人平均胜率为{averages[1]}")
+    st.write('**每轮模拟结果如下**')
+    for i, pr in enumerate(pretty_results):
+        st.markdown(f'**第{i+1}轮**: {pr}')
