@@ -30,7 +30,7 @@ class Game:
             self.characters[seat] = c
             seats = self.original_seats.get(c.name, [])
             seats.append(seat)
-            {'time': 'night 1', 'target': 'all'}[c.name] = seats
+            self.original_seats[c.name] = seats
 
     def _update_scoreboard(self):
         scoreboard = {'werewolf': 0, 'god': 0, 'villager': 0}
@@ -54,7 +54,7 @@ class Game:
                 unknown_players -= 1
                 if role.name == 'werewolf':
                     unknown_werewolves -= 1
-        score = float(unknown_players) / float(unknown_werewolves)
+        score = float(unknown_werewolves) / float(unknown_players)
         for seat, role in self.characters.items():
             if role.revealed:
                 if role.name == 'werewolf':
@@ -64,6 +64,7 @@ class Game:
             else:
                 role.suspect = score
             suspect_scores[seat] = role.suspect
+        self.suspect_scores = suspect_scores
 
     def _check_game_ends(self):
         self._update_scoreboard()
@@ -82,6 +83,34 @@ class Game:
         else:
             self.shift = 'day'
     
+    def find_most_suspectful(self, targets=None, only_unknown=False):
+        self._update_suspect_scores()
+        if targets:
+            if only_unknown:
+                unknown = self._find_unknown()
+                candidates = [t for t in targets if t in unknown]
+            else:
+                candidates = targets
+        else:
+            if only_unknown:
+                candidates = self._find_unknown()
+            else:
+                candidates = []
+                for v in self.survivals.values():
+                    candidates.extend(v)
+
+        scores = [self.suspect_scores[c] for c in candidates]
+        max_score = max(scores)
+        return [c for c in candidates if self.suspect_scores[c] == max_score]
+
+    def _find_unknown(self):
+        seats = []
+        for seat, role in self.characters.items():
+            if role.alive:
+                if not role.revealed:
+                    seats.append(seat)
+        return seats
+
     def get_seats_of(self, targets='all', dead_included=False):
         ''' Targets could be 'all', 'not werwolf', 'werewolf', 'villager'
         'gods', 'not gods', 'not villager', 'seer', 'not seer', 'witch'
@@ -123,7 +152,6 @@ class Game:
         else:
             raise ValueError(f'{targets} is invalid')
 
-    
     @property
     def current_stage(self):
         return f"{self.shift} {self.round}"

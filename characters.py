@@ -4,9 +4,10 @@ import traceback
 
 class Character(ABC):
     
-    def __init__(self):
+    def __init__(self, strategy={}):
         self.death = False
         self.revealed = False
+        self.strategy = {}
         self.suspect = 0.0
     
     def die(self, method=None):
@@ -24,20 +25,23 @@ class Character(ABC):
     
     def __repr__(self):
         return self.name
+    
+    def reveal_identity(self):
+        self.revealed = True
 
 
 class CharacterTypes:
     class Seer(Character):
         
-        def __init__(self):
-            super().__init__()
+        def __init__(self, strategy={}):
+            super().__init__(strategy)
             self.name = 'seer'
             self.camp = 'god'
 
     class Witch(Character):
         
-        def __init__(self):
-            super().__init__()
+        def __init__(self, strategy={}):
+            super().__init__(strategy)
             self.name = 'witch'
             self.camp = 'god'
             self.poison = True
@@ -59,7 +63,7 @@ class CharacterTypes:
         
         def die(self, method):
             if method == 'banished':
-                self.revealed = True
+                self.reveal_identity()
             self.death = True
         
     class Hunter(Character):
@@ -74,7 +78,7 @@ class CharacterTypes:
             if method == 'poisoned':
                 self.shotgun = False
             else:
-                self.revealed = True
+                self.reveal_identity()
             self.death = True
 
     class Villager(Character):

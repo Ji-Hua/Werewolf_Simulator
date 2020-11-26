@@ -5,6 +5,13 @@ strategy_dict = {
     'witch': {
         'antidote': {'round': 1, 'target': 'all'},
         'poison': {'round': 2, 'target': 'werewolf'}
+    },
+    'seer': {
+        'night 1': 'not seer'
+    },
+    'werewolf': {
+        'night 1': 'not seer',
+        'night 2': 'seer'
     }
 }
 characters = {
@@ -16,7 +23,7 @@ characters = {
     'Villager': 4
 }
 
-iter_num = 1000
+iter_num = 100
 sim_results = {'werewolf': 0, 'villager': 0}
 verbose = False
 
