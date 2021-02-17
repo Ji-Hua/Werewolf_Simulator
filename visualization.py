@@ -116,13 +116,17 @@ def vote(group_dict, p_wolf, wolf_arragement=False, sheriff_arrangement=None, sh
                 vote_result[vote_target] += 1
     else:
         for p in good_people:
-            is_wolf = np.random.binomial(1, p_wolf, 1)
-            if is_wolf:
-                vote_target = random_select(wolves)
-                vote_result[vote_target] += 1
+            if p_wolf == 0:
+                all_people = good_people.union(wolves)
+                vote_target = random_select(all_people - set([p]))
             else:
-                vote_target = random_select(good_people - set([p]))
-                vote_result[vote_target] += 1
+                is_wolf = np.random.binomial(1, p_wolf, 1)
+                if is_wolf:
+                    vote_target = random_select(wolves)
+                    vote_result[vote_target] += 1
+                else:
+                    vote_target = random_select(good_people - set([p]))
+                    vote_result[vote_target] += 1
     
     maxium_vote = max(vote_result.values())
     result = random_select([k for k, v in vote_result.items() if v == maxium_vote])
