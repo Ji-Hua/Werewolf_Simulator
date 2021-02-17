@@ -41,6 +41,7 @@ game_setting['wolf'] = wolf_level
 # villager_levels_dict = {'新手': 0.45, '普通': 0.7, '专家': 0.95}
 villager_level = st.sidebar.number_input('好人找到狼人的概率为', value=0.50,
     min_value=0.0, max_value=1.0, step=0.01)
+st.sidebar.markdown('注：0.0 表示好人随机选择除自己外的目标')
 game_setting['villager'] = villager_level
 st.sidebar.markdown('---')
 
