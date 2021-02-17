@@ -120,6 +120,7 @@ def vote(group_dict, p_wolf, wolf_arragement=False, sheriff_arrangement=None, sh
             if p_wolf == 0:
                 all_people = good_people.union(wolves)
                 vote_target = random_select(all_people - set([p]))
+                vote_result[vote_target] += 1
             else:
                 is_wolf = np.random.binomial(1, p_wolf, 1)
                 if is_wolf:
@@ -182,7 +183,11 @@ def prettify_results(results):
 # simulation
 if st.sidebar.button('开始模拟'):
     overall_results = []
-    st.markdown(f'好人等级为 **{villager_level}**')
+    if villager_level == 0:
+        msg = f'好人**随机**投票'
+    else:
+        msg = f'好人等级为 **{villager_level}**'
+    st.markdown(msg)
     if wolf_level == 0:
         msg = f'狼人**随机**刀杀好人'
     else:
