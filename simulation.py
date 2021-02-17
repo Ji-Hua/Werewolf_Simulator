@@ -46,9 +46,13 @@ class Simulation:
         else:
             select = config.get(
                 self.game_stage, 'not werewolf')
-            candidates = self.game.get_seats_of(select)
+            try:
+                # candidate could be dead
+                candidates = self.game.get_seats_of(select)
+            except:
+                candidates = self.game.get_seats_of('not werewolf')
             target = self._pick_one(candidates)
-        
+
         role = self.game.characters[target]
         role.die(method='hunted')
         message = f"{self.game_stage}: Werewolves hunted #{target} {role}"

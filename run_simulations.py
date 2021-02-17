@@ -25,7 +25,7 @@ characters = {
 
 iter_num = 100
 sim_results = {'werewolf': 0, 'villager': 0}
-verbose = False
+verbose = True
 
 for _ in range(iter_num):
     simulation = Simulation(characters, strategy_dict)
