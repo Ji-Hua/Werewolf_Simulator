@@ -84,7 +84,7 @@ ipython_genutils = "==0.2.0"
 Jinja2 = "==2.11.1"
 MarkupSafe = "==1.1.1"
 Pillow = "==7.1.1"
-Pygments = "==2.6.1"
+Pygments = "==2.7.4"
 Send2Trash = "==1.5.0"
 
 [requires]
